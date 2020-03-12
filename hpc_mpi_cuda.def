@@ -41,8 +41,7 @@ intel_sn	/opt
 	sed -ine 's/ARCH_SELECTED=ALL/ARCH_SELECTED=INTEL64/' silent.cfg && \
 	sed -inre "s/\#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
 	sed -ine 's/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/' silent.cfg && \
-	./install.sh --silent silent.cfg && \
-	rm /opt/lincense.lic
+	./install.sh --silent silent.cfg
 
 #open
 %appinstall open
