@@ -1,0 +1,16 @@
+#%Module1.0
+
+proc ModulesHelp { } {
+        global dotversion
+        puts stderr " Open MPI Library"
+}
+
+module-whatis       "Sets up the Open MPI Library environment"
+
+conflict	   mpi
+
+set                topdir                 /opt/openmpi
+set-alias	   mpicc		  $topdir/bin/mpicc
+prepend-path        PATH                   $topdir/bin
+prepend-path        LD_LIBRARY_PATH        $topdir/lib
+

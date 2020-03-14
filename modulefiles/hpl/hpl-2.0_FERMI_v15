@@ -1,0 +1,2 @@
+#%Module1.0
+prepend-env  LD_LIBRARY_PATH   /root/hpl-2.0_FERMI_v15/src/cuda

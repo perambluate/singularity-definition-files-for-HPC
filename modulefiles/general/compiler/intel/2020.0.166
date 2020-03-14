@@ -1,0 +1,36 @@
+#%Module1.0#####################################################################
+#
+# Copyright 2003-2019 Intel Corporation.
+# 
+# This software and the related documents are Intel copyrighted materials, and
+# your use of them is governed by the express license under which they were
+# provided to you (License). Unless the License provides otherwise, you may
+# not use, modify, copy, publish, distribute, disclose or transmit this
+# software or the related documents without Intel's prior written permission.
+# 
+# This software and the related documents are provided as is, with no express
+# or implied warranties, other than those that are expressly stated in the
+# License.
+#
+##
+## Intel(R) MPI Compiler modulefile
+##
+
+proc ModulesHelp { } {
+        global dotversion
+        puts stderr " Intel(R) compiler"
+}
+
+module-whatis       "Sets up the Intel(R) compiler environment"
+
+set                topdir                 /opt/intel/compilers_and_libraries_2020.0.166/linux
+prepend-path        PATH                   $topdir/bin:$topdir/bin/intel64
+prepend-path        LD_LIBRARY_PATH        $topdir/compiler/lib/intel64_lin
+setenv             MANPATH                /opt/intel/man/common
+setenv             INTEL_LICENSE_FILE     $topdir/licenses:/opt/intel/licenses
+
+if { [info exists ::env(NLSPATH) ] } {
+        prepend-path     NLSPATH $topdir/compiler/lib/intel64/locale/%l_%t/%N
+} else {
+        setenv  NLSPATH $topdir/compiler/lib/intel64/locale/%l_%t/%N
+}

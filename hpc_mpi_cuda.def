@@ -8,10 +8,10 @@ Stage: build
 # %environment
 
 %files
-mpi/* /opt
-benchmark/* /root
-modulefiles /root
-intel_sn	/opt
+	mpi/* /opt
+	benchmark/* /root
+	modulefiles /root
+	intel_sn	/opt
 
 %post
 #build arg and env
@@ -61,8 +61,7 @@ intel_sn	/opt
 %appinstall hpl
 	cd $APPDIR && \
 	tar xvf hpl-2.0_FERMI_v15.tar && \
-	rm hpl-2.0_FERMI_v15.tar 
-	# cd hpl-2.0_FERMI_v15 && \
+	rm hpl-2.0_FERMI_v15.tar
 
 
 #hpcc part
