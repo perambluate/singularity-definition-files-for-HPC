@@ -8,8 +8,8 @@ Stage: build
 # %environment
 
 %files
-/storage/hpc/mpi/* /opt
-/storage/hpc/benchmark/* /root
+mpi/* /opt
+benchmark/* /root
 modulefiles /root
 intel_sn	/opt
 
@@ -41,7 +41,8 @@ intel_sn	/opt
 	sed -ine 's/ARCH_SELECTED=ALL/ARCH_SELECTED=INTEL64/' silent.cfg && \
 	sed -inre "s/\#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
 	sed -ine 's/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/' silent.cfg && \
-	./install.sh --silent silent.cfg
+	./install.sh --silent silent.cfg && \
+	rm /opt/intel_sn
 
 #open
 %appinstall open
@@ -60,8 +61,9 @@ intel_sn	/opt
 %appinstall hpl
 	cd $APPDIR && \
 	tar xvf hpl-2.0_FERMI_v15.tar && \
-	rm hpl-2.0_FERMI_v15.tar && \
-	cd hpl-2.0_FERMI_v15 && \
+	rm hpl-2.0_FERMI_v15.tar 
+	# cd hpl-2.0_FERMI_v15 && \
+
 
 #hpcc part
 %appinstall hpcc
