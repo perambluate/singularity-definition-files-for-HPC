@@ -1,0 +1,4 @@
+#%Module1.0
+
+module purge
+module load mpi/intel/2020.0.166 la_lib/intel/2020.0.166

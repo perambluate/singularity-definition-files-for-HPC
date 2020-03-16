@@ -67,13 +67,13 @@ Stage: build
 #hpcc part
 %appinstall hpcc
 	cd $APPDIR && \
-	tar xvf hpcc-1.5.0.tar.gz && \
+	tar zxvf hpcc-1.5.0.tar.gz && \
 	rm hpcc-1.5.0.tar.gz
 
 #hpcg part
 %appinstall hpcg
 	cd $APPDIR && \
-	tar vxf hpcg-3.1_cuda-10_ompi-3.1.tgz && \
+	tar zvxf hpcg-3.1_cuda-10_ompi-3.1.tgz && \
 	rm hpcg-3.1_cuda-10_ompi-3.1.tgz
 
 # Bootstrap: docker

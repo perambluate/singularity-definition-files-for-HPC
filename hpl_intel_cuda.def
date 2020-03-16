@@ -8,10 +8,10 @@ Stage: build
 # %environment
 
 %files
-    mpi/* /opt
-    benchmark/* /root
-    modulefiles/general /root/modulefiles
-    intel_sn	/opt
+    /storage/hpc/mpi/parallel_studio_xe_2020_cluster_edition.tgz /opt
+    /storage/hpc/benchmark/hpl-2.0_FERMI_v15.tar /root
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/general /root/modulefiles
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/intel_sn  /opt
 
 %post
 #build arg and env
@@ -72,11 +72,11 @@ From: nvidia/cuda:10.0-runtime-ubuntu18.04
 Stage: runtime
 
 %files
-    modulefiles/hpl /root/modulefiles
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/hpl /root/modulefiles
 
 %files from build
-    /root/hpl-2.0_FERMI_v15 /root
-    /data/singu/def_files/modulefiles/hpl /root/modulefiles
+    /root/hpl-2.0_FERMI_v15 /root/hpl-2.0_FERMI_v15
+    /root/modulefiles /root/modulefiles
 
 %post
     export DEBIAN_FRONTEND=noninteractive && \ 
