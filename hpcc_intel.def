@@ -46,26 +46,29 @@ Stage: build
 	./install.sh --silent silent.cfg && \
 	rm /opt/intel_sn
 
-#hpl part
-%appinstall hpl
-    # export LANG=C && \
-    # export LC_ALL=C && \
+#hpcc part
+%appinstall hpcc
 	cd $APPDIR && \
-	tar xvf hpl-2.0_FERMI_v15.tar && \
-	rm hpl-2.0_FERMI_v15.tar && \
-	cd hpl-2.0_FERMI_v15 && \
-    sed -iner 's/^TOPdir =/TOPdir = \/root\/hpl-2.0_FERMI_v15 #/' Make.CUDA && \
-    sed -iner 's/^#MPinc/MPinc        = -I${I_MPI_ROOT}\/intel64\/include #/' Make.CUDA && \
-    sed -iner 's/^#MPlib/MPlib        = ${I_MPI_ROOT}\/intel64\/lib\/release\/libmpi.so #/' Make.CUDA && \
-    sed -iner 's/^LAdir        =/LAdir        = ${MKLROOT}\/lib\/intel64 #/' Make.CUDA && \
-    sed -iner 's/^LAinc        =/LAinc        = -I${MKLROOT}\/include #/' Make.CUDA && \
-    sed -ine 's/mpicc/mpiicc/' Make.CUDA && \
-    sed -iner 's/^CCFLAGS =/CCFLAGS = $(HPL_DEFS) -O3 -W -Wall -qopenmp #/' Make.CUDA && \
-    sed -iner 's#/usr/local/cuda/${CUDA_DIR}/' Make.CUDA && \
+	tar xvf hpcc-1.5.0.tar.gz && \
+	rm hpcc-1.5.0.tar.gz && \
+    cd hpcc-1.5.0 && \
+    cp hpl/setup/Make.LinuxIntelIA64Itan2_eccMKL hpl/Make.Intel64 && \
+    sed -iner 's/^TOPdir       =/TOPdir       = ${APPDIR}\/hpcc-1.5.0\/hpl #/' hpl/Make.Intel64 && \
+    sed -iner 's/^MPinc        =/MPinc        = -I${I_MPI_ROOT}\/intel64\/include#/' hpl/Make.Intel64 && \
+    sed -iner 's/^MPlib        =/MPlib        = ${I_MPI_ROOT}\/intel64\/lib\/release\/libmpi.so#/' hpl/Make.Intel64 && \
+    sed -iner 's/^LAinc        =/LAinc        = -I${MKLROOT}\/include#/' hpl/Make.Intel64 && \
+    sed -iner 's/LAlib        = -lmkl_i2p -lpthread -lguide/LAlib        = ${MKLROOT}\/lib\/intel64\/libmkl_scalapack_lp64.a -Wl,\\\
+                --start-group ${MKLROOT}\/lib\/intel64\/libmkl_intel_lp64.a \\\
+                ${MKLROOT}\/lib\/intel64\/libmkl_intel_thread.a \\\
+                ${MKLROOT}\/lib\/intel64\/libmkl_core.a \\\
+                ${MKLROOT}\/lib\/intel64\/libmkl_blacs_openmpi_ilp64.a -Wl,\\\
+                --end-group -liomp5 -lpthread -lm -ldl /' hpl/Make.Intel64 && \
+    sed -ine 's/mpicc/mpiicc/' hpl/Make.Intel64 && \
+    sed -iner 's/^CCFLAGS      =/CCFLAGS      = $(HPL_DEFS) -O3 -fno-alias -Wall -mtune=corei7 -no-prec-div -fp-model fast=2 -parallel -qopenmp#/' hpl/Make.Intel64 && \
     bash -c 'source /etc/profile.d/modules.sh' && \
     module use ${APPDIR}/modulefiles && \
-    module load compiler/intel/2020.0.166  cuda/10.0  la_library/intel/2020.0.166  mpi/intel/2020.0.166 && \
-    make arch=CUDA -j$(nproc)
+    module load compiler/intel/2020.0.166 la_lib/intel/2020.0.166 mpi/intel/2020.0.166 && \
+    make arch=Intel64 -j$(nproc)
     
 Bootstrap: docker
 From: nvidia/cuda:10.0-runtime-ubuntu18.04

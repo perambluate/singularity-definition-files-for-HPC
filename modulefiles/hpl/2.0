@@ -1,0 +1,5 @@
+#%Module1.0
+prepend-path  LD_LIBRARY_PATH   /root/hpl-2.0_FERMI_v15/src/cuda
+
+module purge
+module load cuda/10.0 mpi/intel/2020.0.166 la_lib/intel/2020.0.166
