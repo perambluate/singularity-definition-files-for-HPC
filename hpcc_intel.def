@@ -75,7 +75,7 @@ From: nvidia/cuda:10.0-runtime-ubuntu18.04
 Stage: runtime
 
 %files
-    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/hpcc /root/modulefiles
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/hpcc /root/modulefiles/hpcc
 
 %files from build
     /root/hpcc-1.5.0 /root/hpcc-1.5.0
@@ -83,7 +83,7 @@ Stage: runtime
 
 %post
     export DEBIAN_FRONTEND=noninteractive && \ 
-    apt update && apt install -y wget environment-modules && \
+    apt update && apt install -y wget tcl environment-modules && \
 #intel
     wget https://apt.repos.intel.com/2020/GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
 	apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
