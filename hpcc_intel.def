@@ -93,8 +93,7 @@ Stage: runtime
 	echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
 	apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime && \
     updatedb && \
-    bash -c 'source $(locate mklvars.sh) intel64 > $SINGULARITY_ENVIRONMENT
-        source $(locate mpivars.sh) > $SINGULARITY_ENVIRONMENT'
+    bash -c 'source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) | grep intel > $SINGULARITY_ENVIRONMENT'
 
 %environment
     export HPCC_EXE=/root/hpcc-1.5.0/hpcc
