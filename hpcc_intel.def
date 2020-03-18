@@ -55,9 +55,6 @@ Stage: build
 	cp hpl/setup/Make.LinuxIntelIA64Itan2_eccMKL hpl/Make.Intel64 && \
 	sed -iner 's/^TOPdir       = ..\/..\/../TOPdir       = ${APPDIR}\/hpcc-1.5.0\/hpl/' hpl/Make.Intel64 && \
 	sed -iner 's/^MPinc        =/MPinc        = -I${I_MPI_ROOT}\/intel64\/include#/' hpl/Make.Intel64 && \
-	sed -iner 's/^MPlib        =/MPlib        = ${I_MPI_ROOT}\/intel64\/lib\/release\/libmpi.so#/' hpl/Make.Intel64 && \
-	sed -iner 's/^LAinc        =/LAinc        = -I${MKLROOT}\/include#/' hpl/Make.Intel64 && \
-	sed -iner 's/LAlib        = -lmkl_i2p -lpthread -lguide/LAlib        = ${MKLROOT}\/lib\/intel64\/libmkl_scalapack_lp64.a -Wl,\\\
                 --start-group ${MKLROOT}\/lib\/intel64\/libmkl_intel_lp64.a \\\
                 ${MKLROOT}\/lib\/intel64\/libmkl_intel_thread.a \\\
                 ${MKLROOT}\/lib\/intel64\/libmkl_core.a \\\

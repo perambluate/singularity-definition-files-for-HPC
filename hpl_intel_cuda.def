@@ -72,7 +72,7 @@ From: nvidia/cuda:10.0-runtime-ubuntu18.04
 Stage: runtime
 
 %files
-    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/hpl /root/modulefiles
+    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/hpl /root/modulefiles/hpl
 
 %files from build
     /root/hpl-2.0_FERMI_v15 /root/hpl-2.0_FERMI_v15
