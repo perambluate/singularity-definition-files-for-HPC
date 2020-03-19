@@ -12,13 +12,13 @@ Stage: build
     /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/general /root/modulefiles
     # /data/singu/def_files/hpc_mpi_cuda_singu_def_file/intel_sn  /opt
 
-# %post
-# #build arg and env
-#     export MPIDIR=/opt && \
-#     export APPDIR=/root && \
-#     export LANG=C && \
-#     export LC_ALL=C && \
-# 	export DEBIAN_FRONTEND=noninteractive
+%post
+#build arg and env
+     export MPIDIR=/opt && \
+     export APPDIR=/root && \
+     export LANG=C && \
+     export LC_ALL=C && \
+     export DEBIAN_FRONTEND=noninteractive
 
 # #apt relative package
 #     apt update && apt install -y --reinstall systemd iptables && \
@@ -47,7 +47,6 @@ Stage: build
 
 #hpcc part
 # %appinstall hpcc
-%post 
     apt update && \
     cd $APPDIR && \
     tar zxvf hpcc-1.5.0.tar.gz && \
@@ -66,10 +65,10 @@ Stage: build
                 --end-group -liomp5 -lpthread -lm -ldl/' hpl/Make.Intel64 && \
     sed -ine 's/mpicc/mpiicc/' hpl/Make.Intel64 && \
     sed -iner 's/^CCFLAGS      =/CCFLAGS      = $(HPL_DEFS) -O3 -fno-alias -Wall -mtune=corei7 -no-prec-div -fp-model fast=2 -parallel -qopenmp #/' hpl/Make.Intel64 && \
-    bash -c "source /etc/profile.d/modules.sh && \
+    bash -c 'source /etc/profile.d/modules.sh && \
         module use ${APPDIR}/modulefiles && \
         module load compiler/intel/2020.0.166 la_lib/intel/2020.0.166 mpi/intel/2020.0.166 && \
-        make arch=Intel64 -j$(nproc)"
+        make arch=Intel64 -j$(nproc)'
     
 Bootstrap: docker
 From: nvidia/cuda:10.0-runtime-ubuntu18.04
