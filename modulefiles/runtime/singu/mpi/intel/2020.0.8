@@ -24,13 +24,11 @@ proc ModulesHelp { } {
 module-whatis       "Sets up the Intel(R) MPI Library environment"
 
 set                 topdir                 /opt/intel/psxe_runtime_2020.0.8
-
-setenv              I_MPI_ROOT             $topdir/linux/mpi
-
-prepend-path        CLASSPATH              $topdir/linux/mpi/intel64/lib/mpi.jar
-prepend-path        PATH                   $topdir/linux/mpi/intel64/bin
-prepend-path        LD_LIBRARY_PATH        $topdir/linux/mpi/intel64/lib/release:$topdir/linux/mpi/intel64/lib
-prepend-path        MANPATH                $topdir/linux/mpi/man
+setenv              SINGULARITYENV_I_MPI_ROOT                     $topdir/linux/mpi
+setenv              SINGULARITYENV_PREPEND_CLASSPATH              $topdir/linux/mpi/intel64/lib/mpi.jar
+setenv              SINGULARITYENV_PREPEND_PATH                   $topdir/linux/mpi/intel64/bin
+setenv              SINGULARITYENV_PREPEND_LD_LIBRARY_PATH        $topdir/linux/mpi/intel64/lib/release:$topdir/linux/mpi/intel64/lib
+setenv              SINGULARITYENV_PREPEND_MANPATH                $topdir/linux/mpi/man
 
 if { [info exists ::env(I_MPI_OFI_LIBRARY_INTERNAL) ] } {
     set i_mpi_ofi_library_internal $::env(I_MPI_OFI_LIBRARY_INTERNAL)
@@ -42,10 +40,9 @@ switch -regexp -- $i_mpi_ofi_library_internal {
     0|no|off|disable {
     }
     default {
-        setenv              FI_PROVIDER_PATH       $topdir/linux/mpi/intel64/libfabric/lib/prov
-
-        prepend-path        PATH                   $topdir/linux/mpi/intel64/libfabric/bin
-        prepend-path        LD_LIBRARY_PATH        $topdir/linux/mpi/intel64/libfabric/lib
-        prepend-path        LIBRARY_PATH           $topdir/linux/mpi/intel64/libfabric/lib
+        setenv              SINGULARITYENV_FI_PROVIDER_PATH       $topdir/linux/mpi/intel64/libfabric/lib/prov
+        prepend-path        SINGULARITYENV_PREPEND_PATH                   $topdir/linux/mpi/intel64/libfabric/bin
+        prepend-path        SINGULARITYENV_PREPEND_LD_LIBRARY_PATH        $topdir/linux/mpi/intel64/libfabric/lib
+        prepend-path        SINGULARITYENV_PREPEND_LIBRARY_PATH           $topdir/linux/mpi/intel64/libfabric/lib
     }
 }
