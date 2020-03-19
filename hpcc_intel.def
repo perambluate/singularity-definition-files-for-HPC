@@ -1,53 +1,54 @@
 Bootstrap: docker
 From: nvidia/cuda:10.0-devel-ubuntu18.04
+From: yonoia/mpi_base
 Stage: build
 
 %labels
-    version v0.0.1
-
-# %environment
+    version v0.0.2
 
 %files
-    /storage/hpc/mpi/parallel_studio_xe_2020_cluster_edition.tgz /opt
+    # /storage/hpc/mpi/parallel_studio_xe_2020_cluster_edition.tgz /opt
     /storage/hpc/benchmark/hpcc-1.5.0.tar.gz /root
     /data/singu/def_files/hpc_mpi_cuda_singu_def_file/modulefiles/general /root/modulefiles
-    /data/singu/def_files/hpc_mpi_cuda_singu_def_file/intel_sn  /opt
+    # /data/singu/def_files/hpc_mpi_cuda_singu_def_file/intel_sn  /opt
 
-%post
-#build arg and env
-    	export MPIDIR=/opt && \
-    	export APPDIR=/root && \
-    	export LANG=C && \
-    	export LC_ALL=C && \
-	export DEBIAN_FRONTEND=noninteractive
+# %post
+# #build arg and env
+#     export MPIDIR=/opt && \
+#     export APPDIR=/root && \
+#     export LANG=C && \
+#     export LC_ALL=C && \
+# 	export DEBIAN_FRONTEND=noninteractive
 
-#apt relative package
-    apt update && apt install -y --reinstall systemd iptables && \
-    apt install -y gcc g++ gfortran make cmake wget git ssh tcl python3 vim locate bash-completion \
-	net-tools iputils-ping iproute2 curl \
-	environment-modules \
-	libnss3 libgtk2.*common libpango-1* libasound2* xserver-xorg cpio \
-	libgtk-3-dev libssl-dev linux-headers-$(uname -r) \
-	autoconf automake \
-	libibverbs-dev libatlas3-base \
-	numactl libnuma-dev \
-	tcl-dev tk-dev mesa-common-dev libjpeg-dev libtogl-dev
+# #apt relative package
+#     apt update && apt install -y --reinstall systemd iptables && \
+#     apt install -y gcc g++ gfortran make cmake wget git ssh tcl python3 vim locate bash-completion \
+# 	net-tools iputils-ping iproute2 curl \
+# 	environment-modules \
+# 	libnss3 libgtk2.*common libpango-1* libasound2* xserver-xorg cpio \
+# 	libgtk-3-dev libssl-dev linux-headers-$(uname -r) \
+# 	autoconf automake \
+# 	libibverbs-dev libatlas3-base \
+# 	numactl libnuma-dev \
+# 	tcl-dev tk-dev mesa-common-dev libjpeg-dev libtogl-dev
 
-#intel
-%appinstall intel
-	cd $MPIDIR && \
-	tar zxvf parallel_studio_xe_2020_cluster_edition.tgz && \
-	rm parallel_studio_xe_2020_cluster_edition.tgz && \
-	cd parallel_studio_xe_2020_cluster_edition && \
-	sed -ine 's/ACCEPT_EULA=decline/ACCEPT_EULA=accept/' silent.cfg && \
-	sed -ine 's/ARCH_SELECTED=ALL/ARCH_SELECTED=INTEL64/' silent.cfg && \
-	sed -inre "s/#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
-	sed -ine 's/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/' silent.cfg && \
-	./install.sh --silent silent.cfg && \
-	rm /opt/intel_sn
+# #intel
+# %appinstall intel
+# 	cd $MPIDIR && \
+# 	tar zxvf parallel_studio_xe_2020_cluster_edition.tgz && \
+# 	rm parallel_studio_xe_2020_cluster_edition.tgz && \
+# 	cd parallel_studio_xe_2020_cluster_edition && \
+# 	sed -ine 's/ACCEPT_EULA=decline/ACCEPT_EULA=accept/' silent.cfg && \
+# 	sed -ine 's/ARCH_SELECTED=ALL/ARCH_SELECTED=INTEL64/' silent.cfg && \
+# 	sed -inre "s/#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
+# 	sed -ine 's/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/' silent.cfg && \
+# 	./install.sh --silent silent.cfg && \
+# 	rm /opt/intel_sn
 
 #hpcc part
-%appinstall hpcc
+# %appinstall hpcc
+%post 
+    apt update && \
 	cd $APPDIR && \
 	tar zxvf hpcc-1.5.0.tar.gz && \
 	rm hpcc-1.5.0.tar.gz && \
@@ -83,7 +84,8 @@ Stage: runtime
 
 %post
     export APPDIR=/root && \
-    export MODULEFILES=/root/modulefiles && \
+    # export MODULEFILES=/root/modulefiles && \
+    export ENV_FILE=/root/env && \
     export DEBIAN_FRONTEND=noninteractive
     apt update && apt install -y wget locate tcl environment-modules
 #intel
@@ -93,10 +95,12 @@ Stage: runtime
 	echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
 	apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime && \
     	updatedb && \
-	bash -c 'source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) && env | grep intel > $SINGULARITY_ENVIRONMENT'
+	bash -c "source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) && env | grep intel > ${ENV_FILE}" && \
+    sed -iner "s/^/export /g" ${ENV_FILE} && \
+    cat $ENV_FILE >> $SINGULARITY_ENVIRONMENT
 
 %environment
     export HPCC_EXE=/root/hpcc-1.5.0/hpcc
 
-%startscript
-    ${HPCC_EXE}
+# %startscript
+#     ${HPCC_EXE}
