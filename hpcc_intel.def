@@ -49,9 +49,9 @@ Stage: build
 # %appinstall hpcc
 %post 
     apt update && \
-	cd $APPDIR && \
-	tar zxvf hpcc-1.5.0.tar.gz && \
-	rm hpcc-1.5.0.tar.gz && \
+    cd $APPDIR && \
+    tar zxvf hpcc-1.5.0.tar.gz && \
+    rm hpcc-1.5.0.tar.gz && \
     cd hpcc-1.5.0 && \
     cp hpl/setup/Make.LinuxIntelIA64Itan2_eccMKL hpl/Make.Intel64 && \
     sed -iner 's/^TOPdir       = ..\/..\/../TOPdir       = ${APPDIR}\/hpcc-1.5.0\/hpl/' hpl/Make.Intel64 && \
@@ -66,10 +66,10 @@ Stage: build
                 --end-group -liomp5 -lpthread -lm -ldl/' hpl/Make.Intel64 && \
     sed -ine 's/mpicc/mpiicc/' hpl/Make.Intel64 && \
     sed -iner 's/^CCFLAGS      =/CCFLAGS      = $(HPL_DEFS) -O3 -fno-alias -Wall -mtune=corei7 -no-prec-div -fp-model fast=2 -parallel -qopenmp #/' hpl/Make.Intel64 && \
-    bash -c 'source /etc/profile.d/modules.sh && \
+    bash -c "source /etc/profile.d/modules.sh && \
         module use ${APPDIR}/modulefiles && \
         module load compiler/intel/2020.0.166 la_lib/intel/2020.0.166 mpi/intel/2020.0.166 && \
-        make arch=Intel64 -j$(nproc)'
+        make arch=Intel64 -j$(nproc)"
     
 Bootstrap: docker
 From: nvidia/cuda:10.0-runtime-ubuntu18.04
