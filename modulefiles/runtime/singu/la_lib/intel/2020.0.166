@@ -1,0 +1,20 @@
+#%Module1.0
+proc ModulesHelp { } {
+        global dotversion
+        puts stderr " Intel(R) MKL Library"
+}
+
+module-whatis       "Sets up the Intel(R) MKL Library environment"
+
+conflict	ompi mpich
+
+set                topdir                 /opt/intel/psxe_runtime_2020.0.8/linux
+set		   tbbdir		  $topdir/tbb
+set		   compilerdir		  $topdir/compiler
+set		   mkldir		  $topdir/mkl
+setenv		   SINGULARITYENV_MKLROOT		  $mkldir
+setenv             SINGULARITYENV_CPATH	                  $mkldir/include
+setenv		   SINGULARITYENV_NLSPATH		  $mkldir/lib/intel64_lin/locale/%l_%t/%N
+setenv		   SINGULARITYENV_PKG_CONFIG_PATH	  $mkldir/bin/pkgconfig
+setenv             SINGULARITYENV_PREPEND_LD_LIBRARY_PATH         $mkldir/lib/intel64_lin:$tbbdir/lib/intel64_lin/gcc4.1:$compilerdir/lib/intel64_lin
+setenv             SINGULARITYENV_PREPEND_LIBRARY_PATH            $mkldir/lib/intel64_lin:$tbbdir/lib/intel64_lin/gcc4.1:$compilerdir/lib/intel64_lin
