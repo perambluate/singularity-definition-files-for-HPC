@@ -15,10 +15,10 @@ Stage: build
 
 %post
 #build arg and env
-    MPIDIR=/opt ;\
-    APPDIR=/root ;\
-    LANG=C ;\
-    LC_ALL=C ;\
+    	export MPIDIR=/opt && \
+    	export APPDIR=/root && \
+    	export LANG=C && \
+    	export LC_ALL=C && \
 	export DEBIAN_FRONTEND=noninteractive
 
 #apt relative package
@@ -41,7 +41,7 @@ Stage: build
 	cd parallel_studio_xe_2020_cluster_edition && \
 	sed -ine 's/ACCEPT_EULA=decline/ACCEPT_EULA=accept/' silent.cfg && \
 	sed -ine 's/ARCH_SELECTED=ALL/ARCH_SELECTED=INTEL64/' silent.cfg && \
-	sed -inre "s/\#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
+	sed -inre "s/#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=$(cat ../intel_sn)/" silent.cfg && \
 	sed -ine 's/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/' silent.cfg && \
 	./install.sh --silent silent.cfg && \
 	rm /opt/intel_sn
@@ -53,18 +53,18 @@ Stage: build
 	rm hpcc-1.5.0.tar.gz && \
     cd hpcc-1.5.0 && \
     cp hpl/setup/Make.LinuxIntelIA64Itan2_eccMKL hpl/Make.Intel64 && \
-    sed -iner 's/^TOPdir       = ..\/..\/../TOPdir       = ${APPDIR}\/hpcc-1.5.0\/hpl #/' hpl/Make.Intel64 && \
-    sed -iner 's/^MPinc        =/MPinc        = -I${I_MPI_ROOT}\/intel64\/include#/' hpl/Make.Intel64 && \
-    sed -iner 's/^MPlib        =/MPlib        = ${I_MPI_ROOT}\/intel64\/lib\/release\/libmpi.so#/' hpl/Make.Intel64 && \
+    sed -iner 's/^TOPdir       = ..\/..\/../TOPdir       = ${APPDIR}\/hpcc-1.5.0\/hpl/' hpl/Make.Intel64 && \
+    sed -iner 's/^MPinc        =/MPinc        = -I${I_MPI_ROOT}\/intel64\/include #/' hpl/Make.Intel64 && \
+    sed -iner 's/^MPlib        =/MPlib        = ${I_MPI_ROOT}\/intel64\/lib\/release\/libmpi.so #/' hpl/Make.Intel64 && \
     sed -iner 's/^LAinc        =/LAinc        = -I${MKLROOT}\/include#/' hpl/Make.Intel64 && \
     sed -iner 's/LAlib        = -lmkl_i2p -lpthread -lguide/LAlib        = ${MKLROOT}\/lib\/intel64\/libmkl_scalapack_lp64.a -Wl,\\\
                 --start-group ${MKLROOT}\/lib\/intel64\/libmkl_intel_lp64.a \\\
                 ${MKLROOT}\/lib\/intel64\/libmkl_intel_thread.a \\\
                 ${MKLROOT}\/lib\/intel64\/libmkl_core.a \\\
                 ${MKLROOT}\/lib\/intel64\/libmkl_blacs_openmpi_ilp64.a -Wl,\\\
-                --end-group -liomp5 -lpthread -lm -ldl /' hpl/Make.Intel64 && \
+                --end-group -liomp5 -lpthread -lm -ldl/' hpl/Make.Intel64 && \
     sed -ine 's/mpicc/mpiicc/' hpl/Make.Intel64 && \
-    sed -iner 's/^CCFLAGS      =/CCFLAGS      = $(HPL_DEFS) -O3 -fno-alias -Wall -mtune=corei7 -no-prec-div -fp-model fast=2 -parallel -qopenmp#/' hpl/Make.Intel64 && \
+    sed -iner 's/^CCFLAGS      =/CCFLAGS      = $(HPL_DEFS) -O3 -fno-alias -Wall -mtune=corei7 -no-prec-div -fp-model fast=2 -parallel -qopenmp #/' hpl/Make.Intel64 && \
     bash -c 'source /etc/profile.d/modules.sh && \
         module use ${APPDIR}/modulefiles && \
         module load compiler/intel/2020.0.166 la_lib/intel/2020.0.166 mpi/intel/2020.0.166 && \
@@ -84,7 +84,7 @@ Stage: runtime
 %post
     export APPDIR=/root && \
     export MODULEFILES=/root/modulefiles && \
-    export DEBIAN_FRONTEND=noninteractive && \ 
+    export DEBIAN_FRONTEND=noninteractive
     apt update && apt install -y wget locate tcl environment-modules
 #intel
     cd $APPDIR && \
@@ -92,8 +92,8 @@ Stage: runtime
 	apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
 	echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
 	apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime && \
-    updatedb && \
-    bash -c 'source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) | grep intel > $SINGULARITY_ENVIRONMENT'
+    	updatedb && \
+	bash -c 'source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) && env | grep intel > $SINGULARITY_ENVIRONMENT'
 
 %environment
     export HPCC_EXE=/root/hpcc-1.5.0/hpcc
