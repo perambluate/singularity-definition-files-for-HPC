@@ -86,17 +86,17 @@ Stage: runtime
     # export MODULEFILES=/root/modulefiles && \
     export ENV_FILE=/root/env && \
     export DEBIAN_FRONTEND=noninteractive
-    apt update && apt install -y wget locate tcl environment-modules
+    apt update && apt install -y wget
 #intel
     cd $APPDIR && \
     wget https://apt.repos.intel.com/2020/GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
 	apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
 	echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
-	apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime && \
-    updatedb && \
-	bash -c "source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) && env | grep intel > ${ENV_FILE}" && \
-    sed -iner "s/^/export /g" ${ENV_FILE} && \
-    cat $ENV_FILE >> $SINGULARITY_ENVIRONMENT
+	apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime 
+    # updatedb && \
+	# bash -c "source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) && env | grep intel > ${ENV_FILE}" && \
+    # sed -iner "s/^/export /g" ${ENV_FILE} && \
+    # cat $ENV_FILE >> $SINGULARITY_ENVIRONMENT
 
 # %environment
 #     export HPCC_EXE=/root/hpcc-1.5.0/hpcc
