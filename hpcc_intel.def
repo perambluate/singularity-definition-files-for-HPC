@@ -16,7 +16,10 @@ Stage: build
      export LANG=C && \
      export LC_ALL=C && \
      export DEBIAN_FRONTEND=noninteractive
+<<<<<<< HEAD
 
+=======
+>>>>>>> image_test
 #hpcc part
     apt update && \
     cd $APPDIR && \
@@ -59,4 +62,12 @@ Stage: runtime
     apt-key add GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 && \
     echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
     apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime && \
+<<<<<<< HEAD
     mkdir -p /root/hpc_IO_dir 
+=======
+    updatedb && \
+    bash -c "source $(locate mklvars.sh) intel64 && source $(locate mpivars.sh) && env | grep intel > ${ENV_FILE}" && \
+    sed -iner "s/^/export /g" ${ENV_FILE} && \
+    cat $ENV_FILE >> $SINGULARITY_ENVIRONMENT && \
+    mkdir -p /root/hpc_IO_dir
+>>>>>>> image_test
