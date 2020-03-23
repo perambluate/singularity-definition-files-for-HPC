@@ -1,5 +1,4 @@
 Bootstrap: docker
-# From: nvidia/cuda:10.0-devel-ubuntu18.04
 From: yonoia/mpi_base
 Stage: build
 
@@ -61,6 +60,3 @@ Stage: runtime
     echo "deb https://apt.repos.intel.com/2020 intel-psxe-runtime main" > /etc/apt/sources.list.d/intel-psxe-runtime-2020.list && \
     apt update && apt install -y intel-icc-runtime intel-mkl-runtime intel-mpi-runtime intel-openmp-runtime && \
     mkdir -p /root/hpc_IO_dir 
-
-%environment
-     export HPCC_EXE=/root/hpcc-1.5.0
