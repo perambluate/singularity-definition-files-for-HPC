@@ -1,0 +1,9 @@
+#%Module1.0
+
+set    WORKSPACE    /workspace
+setenv    RESULT_PATH    $WORKSPACE/results
+setenv    MNLI_PATH    $WORKSPACE/data/glue_data/MNLI
+setenv    BASE_MODEL    $WORKSPACE/model/multi_cased_L-12_H-768_A-12
+setenv    LARGE_MODEL    $WORKSPACE/model/wwm_uncased_L-24_H-1024_A-16
+setenv    GOOGLE_BERT_CODE_PATH    $WORKSPACE/github/bert
+setenv    NVIDIA_BERT_CODE_PATH    $WORKSPACE/github/DeepLearningExamples/TensorFlow/LanguageModeling/BERT
