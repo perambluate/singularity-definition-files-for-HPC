@@ -1,7 +1,7 @@
 Bootstrap: docker
 #From: nvidia/cuda:10.0-devel-ubuntu18.04
 #Stage: openmpi_installation
-From: yonoia/mpi_base:latest
+From: yonoia/mpi_base:cuda10.0-devel-ubuntu16.04
 Stage: build
 
 %files
