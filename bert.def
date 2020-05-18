@@ -58,10 +58,9 @@ Stage: runtime
 %files from build
     /opt/openmpi-3.1.5  /opt/openmpi-3.1.5
     /workspace  /workspace
-    /root/modulefiles/runtime/singu   /workspace/modulefiles
+    /root/modulefiles/runtime   /workspace/modulefiles
     /root/modulefiles/general/cuda   /workspace/modulefiles/cuda
     /root/modulefiles/general/mpi/open   /workspace/modulefiles/mpi/open
-    /root/modulefiles/bert  /workspace/modulefiles/bert
     /root/scripts/bert  /workspace/scripts
 
 %post
@@ -85,7 +84,7 @@ Stage: runtime
     pip3 install tensorflow-gpu==1.15 &&\
     ln -sf /usr/bin/python3 /usr/bin/python &&\
     bash -c "source /etc/profile.d/modules.sh &&\
-    module load $WORKDIR/modulefiles &&\
+    module use $WORKDIR/modulefiles &&\
     module load mpi/intel &&\
     HOROVOD_GPU_ALLREDUCE=NCCL \
     HOROVOD_NCCL_HOME=/usr/lib/x86_64-linux-gnu \
