@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: nvidia/cuda:10.0-cudnn7-devel-centos7
+
+%post
+    export MODULEFILE=~/modulefiles && \
+    yum install -y kernel-devel kernel-headers epel-release && \
+    yum install -y dkms-nvidia && \
+    yum install -y cuda-10-0 wget unzip git \
+        python3 python3-devel gcc-gfortran \
+        rpm-build rpmdevtools \
+        environment-modules
+#openmpi
+    ln -sf /usr/bin/python3 $(which python) && \
+    for file in "/usr/bin/yum /usr/libexec/urlgrabber-ext-down"; \
+    do sed -iner 's/python/python2/' $file; done && \
+    wget -P /workspace/download https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-3.1.6.tar.gz && \
+    tar -zxvf /download/openmpi-3.1.6.tar.gz -C /opt && cd /opt/openmpi-3.1.6 && \
+    CC=gcc FC=gfortran ./configure --with-cuda --prefix=/opt/openmpi/3.1.6 && \
+    make -j$(nproc) && make install -j$(nproc)
+#module files for openmpi and cuda
+    mkdir -p $MODULEFILE $MODULEFILE/mpi $MODULEFILE/mpi/openmpi $MODULEFILE/cuda &&\
+    cat > $MODULEFILE/mpi/openmpi/3.1.6 <<EOF
+\#%Module1.0
+conflict    mpi
+set    top    /opt/openmpi/3.1.6
+prepend-path    PATH    \$top/bin
+prepend-path    LD_LIBRARY_PATH    \$top/lib
+EOF
+    cat > $MODULEFILE/cuda/10.0 <<EOF
+\#%Module1.0
+conflict    cuda
+set    top    /usr/local/cuda-10.0
+prepend-path    PATH    \$top/bin
+prepend-path    LD_LIBRARY_PATH    \$top/lib64
+EOF
+#nccl
+    git clone https://github.com/NVIDIA/nccl.git /opt/nccl && \
+    cd /opt/nccl && \
+    make pkg.redhat.build -j$(nproc) && \
+    rpm -i build/pkg/rpm/x86_64/libnccl-2.6.4-1+cuda10.0.x86_64.rpm
+    yum update -y
+#tensorflow
+python3 -m pip install -U pip && \
+python3 -m pip install -U setuptools && \
+python3 -m pip install tensorflow-gpu==1.15
+#horovod
+HOROVOD_GPU_ALLREDUCE=NCCL \
+HOROVOD_NCCL_HOME=/opt/nccl/build/pkg/rpm/build/nccl_2.6.4-1+cuda10.0_x86_64 \
+python3 -m pip install --no-cache-dir horovod==0.16

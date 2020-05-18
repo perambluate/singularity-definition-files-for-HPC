@@ -71,7 +71,7 @@ Stage: runtime
      export LC_ALL=C &&\
      export DEBIAN_FRONTEND=noninteractive
 #apt installation for prerequisite
-    apt update && apt install -y wget git unzip python3-pip environment-modules &&\
+    apt update && apt install -y wget git unzip python3-pip pytohn3-dev environment-modules &&\
 #install intel mpi runtime package
     cd $MPIDIR &&\
     wget https://apt.repos.intel.com/2020/GPG-PUB-KEY-INTEL-PSXE-RUNTIME-2020 &&\
