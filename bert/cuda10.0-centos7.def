@@ -22,14 +22,14 @@ From: nvidia/cuda:10.0-cudnn7-devel-centos7
 #module files for openmpi and cuda
     mkdir -p $MODULEFILE $MODULEFILE/mpi $MODULEFILE/mpi/openmpi $MODULEFILE/cuda &&\
     cat > $MODULEFILE/mpi/openmpi/3.1.6 <<EOF
-\#%Module1.0
+#%Module1.0
 conflict    mpi
 set    top    /opt/openmpi/3.1.6
 prepend-path    PATH    \$top/bin
 prepend-path    LD_LIBRARY_PATH    \$top/lib
 EOF
     cat > $MODULEFILE/cuda/10.0 <<EOF
-\#%Module1.0
+#%Module1.0
 conflict    cuda
 set    top    /usr/local/cuda-10.0
 prepend-path    PATH    \$top/bin
